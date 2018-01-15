@@ -1,0 +1,18 @@
+name: resonance
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python >=3.5
+  - setuptools >=20.7
+  - pip >=8.1
+  - numpy >=1.11
+  - scipy >=0.17
+  - matplotlib >=2.1  # required for Rectangle.angle and .to_jshtml()
+  - pandas >=0.17
+  - sympy >=0.7.6
+  - notebook
+  - ipywidgets
+  - jupyter_contrib_nbextensions
+  - pip:
+    - resonance
