@@ -63,7 +63,7 @@ class BookCupSystem(SingleDoFNonLinearSystem):
 
         self.add_measurement('bottom_left_y', bottom_left_y)
 
-        def create_plot(r, l, d, theta, bottom_left_x, bottom_left_y):
+        def create_plot(time, r, l, d, theta, bottom_left_x, bottom_left_y):
             fig, ax = plt.subplots(1, 1)
             width = max(l, r * 2)
             ax.set_xlim((-width / 2 - width / 10, width / 2 + width / 10))
@@ -82,12 +82,16 @@ class BookCupSystem(SingleDoFNonLinearSystem):
             ax.add_patch(circ)
             ax.add_patch(rect)
 
+            title = ax.set_title('Time: {:.2f} [s]'.format(time))
+
             # make sure to return the rectangle, which moves at each time step!
-            return fig, rect
+            return fig, rect, title
 
         self.config_plot_func = create_plot
 
-        def update_frame(theta, bottom_left_x, bottom_left_y, rect):
+        def update_frame(time, theta, bottom_left_x, bottom_left_y, rect,
+                         title):
+            title.set_text('Time: {:.2f} [s]'.format(time))
             rect.set_xy((bottom_left_x, bottom_left_y))
             rect.angle = -np.rad2deg(theta)
             rect._angle = -np.rad2deg(theta)
