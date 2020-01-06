@@ -39,6 +39,7 @@ def eom_in_first_order_form(T, U, q, u, t):
     return sm.Eq(sm.Matrix([q.diff(), u.diff()]), sm.Matrix([kin, dyn]))
 
 
+
 class BookCupSystem(SingleDoFNonLinearSystem):
 
     def __init__(self):
@@ -52,6 +53,39 @@ class BookCupSystem(SingleDoFNonLinearSystem):
         self.constants['g'] = 9.81  # m/s**2
         self.coordinates['theta'] = 0.0  # rad
         self.speeds['omega'] = 0.0  # rad/s
+        
+        def rhs(theta, omega, d, l, r, g):
+            """Returns the derivatives of the state variables.
+            
+            Parameters
+            ==========
+            theta : float
+                Angle of the book in radians.
+            omega : float
+                Angular rate of the book in radians per second.
+            d : float
+                Book thickness in meters.
+            l : float
+                Book width in meters.
+            r : float
+                Cup radius in meters.
+            g : float
+                Acceleration due to gravity in meters per squared seconds.
+                
+            Returns
+            =======
+            thetadot : float
+                The angular rate of the book in radians per second.
+            omegadot : float
+                The angular acceleration of the book in radians per second.
+            
+            """
+            thetadot = omega
+            omegadot = (6 * d * g * np.sin(theta) - 12 * g * r * theta * np.cos(theta) -
+                12 * r**2 * omega**2 * theta) / (4 * d**2 + l**2 + 12 * r**2 * theta**2)
+            return thetadot, omegadot
+
+        self.diff_eq_func = rhs
 
         def bottom_left_x(r, l, theta):
             return r * np.sin(theta) - (r * theta + l / 2) * np.cos(theta)
